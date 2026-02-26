@@ -1,0 +1,13 @@
+public boolean loginToHealthAppByGivenValidCredetial(Map<String, String> expectedData) throws Exception {
+
+    commonEvents.sendKeys(usernameTextbox, expectedData.get("username"));
+    commonEvents.sendKeys(passwordTextbox, expectedData.get("password"));
+    commonEvents.click(signInButton);
+
+    Thread.sleep(3000);
+
+    if(commonEvents.isDisplayed(registeredPatientTextElement)) {
+        return true;
+    }
+    return false;
+}
