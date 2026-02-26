@@ -1,0 +1,90 @@
+package coreUtilities.utils;
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.*;
+import java.time.Duration;
+
+public class CommonEvents {
+
+    protected WebDriver driver;
+    protected WebDriverWait wait;
+
+    public CommonEvents(WebDriver driver) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+    }
+
+    // Click Method
+    public void click(By locator) {
+        wait.until(ExpectedConditions.elementToBeClickable(locator));
+        driver.findElement(locator).click();
+    }
+
+    // Send Keys Method
+    public void sendKeys(By locator, String value) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        WebElement element = driver.findElement(locator);
+        element.clear();
+        element.sendKeys(value);
+    }
+
+    // Get Text Method
+    public String getText(By locator) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return driver.findElement(locator).getText();
+    }
+
+    // Get Attribute Value (for input fields)
+    public String getAttribute(By locator, String attributeName) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return driver.findElement(locator).getAttribute(attributeName);
+    }
+
+    // Select dropdown by visible text
+    public void selectByVisibleText(By locator, String visibleText) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        Select select = new Select(driver.findElement(locator));
+        select.selectByVisibleText(visibleText);
+    }
+
+    // Get selected dropdown value
+    public String getSelectedOption(By locator) {
+        Select select = new Select(driver.findElement(locator));
+        return select.getFirstSelectedOption().getText();
+    }
+
+    // Check element displayed
+    public boolean isDisplayed(By locator) {
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            return driver.findElement(locator).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    // Alert handling
+    public String getAlertTextAndAccept() {
+        wait.until(ExpectedConditions.alertIsPresent());
+        Alert alert = driver.switchTo().alert();
+        String text = alert.getText();
+        alert.accept();
+        return text;
+    }
+
+    // Scroll into view
+    public void scrollIntoView(By locator) {
+        WebElement element = driver.findElement(locator);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView(true);", element);
+    }
+
+    // Keyboard ALT + key
+    public void pressAltPlusKey(String key) {
+        Actions actions = new Actions(driver);
+        actions.keyDown(Keys.ALT)
+                .sendKeys(key)
+                .keyUp(Keys.ALT)
+                .perform();
+    }
+}
